@@ -96,7 +96,7 @@ async function run() {
         });
 
         //user role update
-        app.put('/users', async (req, res) => {
+        app.put('/users/:email', async (req, res) => {
             const email = req.body.email;
             const filter = { email: email };
             const options = { upsert: true };
