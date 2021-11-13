@@ -82,32 +82,63 @@ async function run() {
             const orders = await cursor.toArray();
             res.json(orders);
         });
+        //PUT APi(googlesign user email upsert)
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email }
+            const options = { upsert: true };
+            const updateDoc = { $set: user }
+            const result = usersCollection.updateOne(filter, updateDoc, options);
+            console.log(result);
+            res.json(result);
+        });
 
-        //get user by email with admin role
+        //GET API (for check admin or not)
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
-            const query = { email: email };
-            const user = await usersCollection.findOne(query);
+            const query = { email: email }
+            const user = await usersCollection.findOne(query)
             let isAdmin = false;
-            if (user?.role === 'Admin') {
+            if (user?.role === 'admin') {
                 isAdmin = true;
             }
-            res.json({ admin: isAdmin });
+            res.send({ admin: isAdmin });
         });
 
-        //user role update
-        app.put('/users/:email', async (req, res) => {
-            const email = req.body.email;
-            const filter = { email: email };
-            const options = { upsert: true };
-            const updateDoc = {
-                $set: {
-                    role: 'Admin'
-                }
-            }
-            const result = await usersCollection.updateOne(filter, updateDoc, options);
-            res.send(result)
+        //PUT API (make admin)
+        app.put('/users/admin', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email }
+            const updateDoc = { $set: { role: 'admin' } }
+            const result = await usersCollection.updateOne(filter, updateDoc)
+            res.json(result);
         });
+
+        //get user by email with admin role
+        // app.get('/users/:email', async (req, res) => {
+        //     const email = req.params.email;
+        //     const query = { email: email };
+        //     const user = await usersCollection.findOne(query);
+        //     let isAdmin = false;
+        //     if (user?.role === 'Admin') {
+        //         isAdmin = true;
+        //     }
+        //     res.json({ admin: isAdmin });
+        // });
+
+        // //user role update
+        // app.put('/users/', async (req, res) => {
+        //     const email = req.body.email;
+        //     const filter = { email: email };
+        //     const options = { upsert: true };
+        //     const updateDoc = {
+        //         $set: {
+        //             role: 'Admin'
+        //         }
+        //     }
+        //     const result = await usersCollection.updateOne(filter, updateDoc, options);
+        //     res.send(result)
+        // });
 
         //delete order from orders collection
         app.delete('/orders/:id', async (req, res) => {
