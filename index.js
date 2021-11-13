@@ -82,7 +82,7 @@ async function run() {
             const orders = await cursor.toArray();
             res.json(orders);
         });
-        //PUT APi(googlesign user email upsert)
+        //PUT APi google sign in user email upsert
         app.put('/users', async (req, res) => {
             const user = req.body;
             const filter = { email: user.email }
@@ -93,7 +93,7 @@ async function run() {
             res.json(result);
         });
 
-        //GET API (for check admin or not)
+        //GET API  check admin
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email }
@@ -105,7 +105,7 @@ async function run() {
             res.send({ admin: isAdmin });
         });
 
-        //PUT API (make admin)
+        //PUT API make admin
         app.put('/users/admin', async (req, res) => {
             const user = req.body;
             const filter = { email: user.email }
@@ -114,33 +114,6 @@ async function run() {
             res.json(result);
         });
 
-        //get user by email with admin role
-        // app.get('/users/:email', async (req, res) => {
-        //     const email = req.params.email;
-        //     const query = { email: email };
-        //     const user = await usersCollection.findOne(query);
-        //     let isAdmin = false;
-        //     if (user?.role === 'Admin') {
-        //         isAdmin = true;
-        //     }
-        //     res.json({ admin: isAdmin });
-        // });
-
-        // //user role update
-        // app.put('/users/', async (req, res) => {
-        //     const email = req.body.email;
-        //     const filter = { email: email };
-        //     const options = { upsert: true };
-        //     const updateDoc = {
-        //         $set: {
-        //             role: 'Admin'
-        //         }
-        //     }
-        //     const result = await usersCollection.updateOne(filter, updateDoc, options);
-        //     res.send(result)
-        // });
-
-        //delete order from orders collection
         app.delete('/orders/:id', async (req, res) => {
             const id = req.params.id;
             console.log(id)
@@ -179,37 +152,4 @@ app.get('/', (req, res) => {
 //listen
 app.listen(port, () => {
     console.log('Server is running at port ', port);
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// app.put('/users/admin', async (req, res) => {
-//     const user = req.body;
-//     const requester = req.decodedEmail;
-//     console.log(requester)
-//     if (requester) {
-//         const requesterAccount = await usersCollection.findOne({ email: requester });
-//         if (requesterAccount.role === 'admin') {
-//             const filter = { email: user.email };
-//             const updateDoc = { $set: { role: 'admin' } };
-//             const result = await usersCollection.updateOne(filter, updateDoc);
-//             res.json(result);
-//         }
-//     }
-
-
-// })
+});
