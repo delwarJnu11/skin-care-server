@@ -91,8 +91,6 @@ async function run() {
             let isAdmin = false;
             if (user?.role === 'Admin') {
                 isAdmin = true;
-            } else {
-                isAdmin = false;
             }
             res.json({ admin: isAdmin });
         });
